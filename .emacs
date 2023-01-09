@@ -1,13 +1,19 @@
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
-
+(add-to-list 'load-path "~/.emacs.local/")
+(require 'simpc-mode)
+(add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
 (package-initialize)
 (setq warning-minimum-level :emergency)
 (add-to-list 'default-frame-alist '(font . "Iosevka-20"))
 (set-face-attribute 'default t :font "Iosevka-20")
-
-
+(setq mac-command-modifier 'meta
+      mac-option-modifier 'none
+      default-input-method "MacOSX")
+(setq mac-option-modifier 'meta)
+(setq mac-option-key-is-meta t
+      mac-right-option-modifier nil)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 (scroll-bar-mode 0)
@@ -18,9 +24,8 @@
 (require 'dired-x)
 (setq dired-omit-files
       (concat dired-omit-files "\\|^\\..+$"))
-
 (add-to-list 'auto-mode-alist '("\\.asm\\'" . nasm-mode))
-
+(add-hook 'dired-mode-hook(lambda () (dired-omit-mode)))
 (require 'evil)
 (evil-mode 1)
 
@@ -34,6 +39,11 @@
 (global-set-key (kbd "C->") 'mc/mark-next-line-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
+
+(add-hook 'simpc-mode-hook
+	  (lambda ()
+	    (interactive)
+	    (setq-local fill-paragraph-function 'astyle-buffer)))
 
 
 (defun kill-dired-buffers ()
